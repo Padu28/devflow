@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#09090B" />
+    <meta
+      name="description"
+      content="DevFlow — Multi-tenant project management and real-time collaboration platform."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2309090B'/%3E%3Cpath d='M8 21L15 9h5l-4.5 7.5H23L13 24l2.5-5.5H8z' fill='%23C6F432'/%3E%3C/svg%3E"
+    />
+    <title>DevFlow — Work that flows</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem('devflow-theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = saved === 'light' || saved === 'dark' ? saved : prefersDark ? 'dark' : 'dark';
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body class="bg-[var(--bg)] text-[var(--text)] antialiased selection:bg-[var(--accent)] selection:text-[var(--accent-fg)]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

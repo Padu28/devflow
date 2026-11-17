@@ -1,0 +1,40 @@
+@base = http://localhost:8000/api/v1
+
+### Health
+GET http://localhost:8000/health
+
+### Login (Demo User)
+# @name login
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "demo@devflow.dev",
+  "password": "DemoPass123!"
+}
+
+### Current User
+@token = {{login.response.body.access_token}}
+GET {{base}}/auth/me
+Authorization: Bearer {{token}}
+
+### List Organizations
+# @name orgs
+GET {{base}}/organizations
+Authorization: Bearer {{token}}
+
+### List Projects in First Org
+@orgId = {{orgs.response.body.$[0].id}}
+# @name projects
+GET {{base}}/organizations/{{orgId}}/projects
+Authorization: Bearer {{token}}
+
+### Load Board
+@projectId = {{projects.response.body.items[0].id}}
+GET {{base}}/projects/{{projectId}}/board
+Authorization: Bearer {{token}}
+
+### Analytics Overview
+GET {{base}}/organizations/{{orgId}}/analytics/overview?days=30
+Authorization: Bearer {{token}}
+
