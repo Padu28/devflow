@@ -6,6 +6,13 @@ A full-stack, multi-tenant team workspace built with **FastAPI, SQLAlchemy 2, Po
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-38BDF8.svg)
 ![React 18 + TS](https://img.shields.io/badge/React-18%20%2B%20TypeScript-A78BFA.svg)
 
+![DevFlow landing page](docs/screenshots/landing.png)
+
+## What is DevFlow?
+DevFlow is a team workspace for planning and tracking software work, similar to Jira, Linear or Trello. A company signs up as a **workspace** (for example *Acme Labs*), invites its people with a role, and organises work into **projects**. Each project has a **Kanban board** where tasks move from *Backlog* to *Done*, and every change shows up instantly for everyone else who has the board open.
+
+It is built as a production-style full-stack app: each workspace's data is strictly isolated from the others, permissions are enforced on every API call, and dashboards are computed from live SQL rather than mocked numbers.
+
 ## Problem
 Engineering teams need fast, predictable project tracking with strict tenant isolation, role-based access control, optimistic drag-and-drop, and live collaboration—without bloated UI or N+1 query bottlenecks.
 
@@ -14,6 +21,50 @@ Engineering teams need fast, predictable project tracking with strict tenant iso
 - **Kanban & List Workflows**: Custom columns with WIP limits, drag-and-drop (`dnd-kit`) with optimistic UI + rollback, keyboard move alternatives (`Alt+Arrows` & menu), fractional midpoint task ordering with row locks, subtasks, markdown comments, and saved filter views.
 - **Real-Time Collaboration**: Authenticated WebSockets (`/api/v1/ws/organizations/{id}`) with live presence, task/comment broadcasts, optional Redis Pub/Sub fan-out, exponential backoff, and 30s polling fallback.
 - **Analytics & Search**: Real PostgreSQL/SQL aggregates (completion trend, status breakdown, priority donut, member workload) and `⌘K` command palette with server-side search.
+
+## How It Works
+1. **Create a workspace.** Sign up and you become the workspace **owner**.
+2. **Invite your team.** Give each person a role: **admin** (manage the workspace), **member** (create and edit tasks) or **viewer** (read only).
+3. **Start a project.** Each project gets a short key (such as `API`, `WEB`, `MOB`), so its tasks are numbered `API-1`, `API-2`, and so on.
+4. **Plan on the board.** Add tasks with a priority, label, assignee, due date, subtasks and comments, then drag them across columns. Columns can have WIP limits (for example *In Progress 3/5*).
+5. **Collaborate live.** Moves, edits and comments are pushed to everyone over WebSockets, and you can see who else is online.
+6. **Track progress.** The dashboard, analytics charts and activity feed show what is open, done, due or overdue.
+
+## Screenshots
+
+### Dashboard
+Workspace overview with open, completed, due-this-week and overdue counts, active projects with progress, and recent activity.
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Projects
+Every project in the workspace with its progress bar, team members and last update. Switch between grid and list views, or filter by status.
+
+![Projects](docs/screenshots/projects.png)
+
+### Kanban board
+Tasks grouped into Backlog, To Do, In Progress and In Review, with priority icons, labels, due dates, subtask and comment counts, and assignee avatars. Filter by assignee, priority or label, and save filters as views.
+
+![Platform API board](docs/screenshots/board-api.png)
+
+<details>
+<summary>More boards</summary>
+
+![Website Relaunch board](docs/screenshots/board-web.png)
+
+![Mobile App board](docs/screenshots/board-mobile.png)
+
+</details>
+
+### Analytics
+Charts computed directly from PostgreSQL: completion trend over 7, 30 or 90 days, tasks by status, tasks by priority and workload per member.
+
+![Analytics](docs/screenshots/analytics.png)
+
+### Activity feed
+An audit log of every project, task and membership change, grouped by day.
+
+![Activity feed](docs/screenshots/activity.png)
 
 ## Architecture
 
@@ -66,7 +117,11 @@ Open `http://localhost:5173` (API docs at `http://localhost:8000/docs`).
 cd devflow
 docker compose up --build
 ```
-Open `http://localhost:8080`.
+Load the demo workspace (run once, in a second terminal):
+```bash
+docker compose exec backend python -m app.scripts.seed
+```
+Open `http://localhost:8080` and sign in with one of the demo accounts below.
 
 ### Demo Credentials (Seeded by `python -m app.scripts.seed`)
 | Email | Password | Role |
